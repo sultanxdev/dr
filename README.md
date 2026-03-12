@@ -20,28 +20,69 @@ This project uses the latest stable tools in the React ecosystem:
 - **[Tailwind CSS v4](https://tailwindcss.com/)** - A utility-first CSS framework for rapid UI development.
 - **[Framer Motion](https://www.framer.com/motion/)** - A production-ready motion library for React.
 - **[Lucide React](https://lucide.dev/)** - Beautiful & consistent icons.
-- **[TypeScript](https://www.typescriptlang.org/)** - Strongly typed programming language.
+- **[TypeScript](https://www.typescriptlang.org/)** - Strongly typed programming language that builds on JavaScript.
 
-## Getting Started
+## System Architecture
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```mermaid
+graph TD
+    Client[Client Browser] <-->|HTTP/HTTPS| Frontend[Next.js App Server]
+    
+    subgraph Frontend Application
+        UI[React 19 Components]
+        Styling[Tailwind CSS v4]
+        Animations[Framer Motion]
+        Icons[Lucide React]
+        
+        UI --- Styling
+        UI --- Animations
+        UI --- Icons
+    end
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## User Flow
 
-You can modify the configuration and branding via `src/config/clientData.ts`. The page will auto-update as you edit the file.
+```mermaid
+flowchart LR
+    A[Landing Page] --> B{User Action}
+    B -->|Explore| C[Services & Treatments]
+    B -->|Learn More| D[About Doctor]
+    B -->|Read Reviews| E[Testimonials]
+    B -->|Get Answers| F[FAQs]
+    
+    C --> G([Contact / Book Consultation])
+    D --> G
+    E --> G
+    F --> G
+```
 
-## Deployment
+## Component Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```mermaid
+classDiagram
+    class AppLayout {
+        +Navbar
+        +Footer
+        +MainContent
+    }
+    
+    class LandingPage {
+        +HeroSection
+        +ServicesSection
+        +AboutSection
+        +TestimonialsSection
+        +FAQSection
+    }
+    
+    class ServicesSection {
+        +ServiceCard[]
+    }
+    
+    class FAQSection {
+        +AccordionItem[]
+    }
+    
+    AppLayout --> LandingPage : Renders
+    LandingPage *-- ServicesSection : Contains
+    LandingPage *-- FAQSection : Contains
+```
