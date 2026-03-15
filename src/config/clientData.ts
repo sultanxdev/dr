@@ -1,129 +1,160 @@
+// ============================================================
+//  CENTRALIZED CLIENT CONFIGURATION
+//  ─────────────────────────────────────────────────────────
+//  This is THE single source of truth for every piece of
+//  text, color, contact detail, and feature flag shown on
+//  the website.
+//
+//  To customise for a new client, ONLY edit this file.
+//  Every section is clearly labeled.
+// ============================================================
+
 export const clientData = {
+
+  // ── 1. DEMO / RESELLER FLAGS ──────────────────────────────
+  //  Set `isDemo` to true while presenting to a prospect.
+  //  A banner will appear at the top of the site.
+  //  Set to false when a real client goes live.
+  demo: {
+    isDemo: true,
+    bannerText: "🚀 Demo Preview — This website is fully customisable for your clinic.",
+    bannerSubText: "Contact us to get your own branded version.",
+  },
+
+  // ── 2. BRAND ──────────────────────────────────────────────
   brand: {
-    name: "Lumina Dermatology",
+    name: "Your Clinic Name",            // e.g.  "Skintimacy Clinic"
     tagline: "Reveal Your Best Skin",
-    logoText: "LUMINA", // Used if no image logo is provided
+    logoText: "DERM",                    // Short text used in navbar/footer logo
+    builtBy: "Sultandev",               // Credit shown in footer (optional)
   },
+
+  // ── 3. DOCTOR PROFILE ─────────────────────────────────────
+  aboutDoctor: {
+    heading: "Meet Your Dermatologist",
+    name: "Dr. [Name]",
+    credentials: "(MBBS, MD, Dermatology)",
+    bioParagraphs: [
+      "An MCI-recognised dermatologist with advanced training from a leading medical institution. Specialising in evidence-based skincare, hair care, and aesthetic medicine.",
+      "With years of clinical experience, our doctor brings expertise across general dermatology, cosmetic procedures, anti-aging treatments, and non-surgical facial rejuvenation.",
+      "Every treatment plan is tailored to the individual — because your skin is unique."
+    ],
+    ctaText: "Book a Consultation",
+    imageUrl: "https://images.unsplash.com/photo-1594824436998-058b231b611c?q=80&w=800&auto=format&fit=crop",
+  },
+
+  // ── 4. CONTACT & LOCATION ─────────────────────────────────
   contact: {
-    phone: "+1 (800) 555-SKIN",
-    email: "booking@luminaderma.example.com",
-    address: "123 Derma Way, Suite 400, New York, NY 10001",
-    workingHours: "Mon-Sat: 9am - 6pm",
+    phone: "+91 98765 00000",
+    email: "appointments@yourclinic.com",
+    address: "Your Clinic Address, City, State – 000000",
+    workingHours: "Mon – Sat: 10:00 AM – 7:00 PM",
+    // WhatsApp number (digits only, with country code, no + sign, no spaces)
+    // Used for form submission →  data is sent as a pre-filled WhatsApp message
+    whatsappNumber: "919876500000",
   },
+
+  // ── 5. SOCIAL LINKS ───────────────────────────────────────
+  //  Set to empty string "" to hide an icon.
   social: {
-    instagram: "https://instagram.com/skintimacy.in",
+    instagram: "https://instagram.com",
     facebook: "https://facebook.com",
-    linkedin: "https://linkedin.com",
-    whatsapp: "https://wa.me/message/CUTNOUKMHQQ4I1",
+    linkedin: "",
+    whatsapp: "https://wa.me/919876500000",
   },
-  colors: {
-    // Elegant, premium color palette
-    primary: "#4A5D4E", // A soft sage/forest green
-    primaryHover: "#3C4B3F",
-    accent: "#D4AF37", // Soft gold for luxury feel
-    background: "#FAFAFA",
-    textMain: "#1F2937",
-    textMuted: "#6B7280",
+
+  // ── 6. APPOINTMENT FORM ───────────────────────────────────
+  //  Controls what the booking form collects and how it submits.
+  appointment: {
+    formTitle: "Request an Appointment",
+    formSubTitle: "We'll confirm your slot within 1 hour during working hours.",
+    submitVia: "whatsapp" as "whatsapp" | "email" | "both",
+    // Fields that appear in the form — set `enabled: false` to hide a field
+    fields: {
+      name:    { label: "Full Name",       placeholder: "Rahul Sharma",         required: true,  enabled: true },
+      phone:   { label: "Phone Number",    placeholder: "+91 98765 00000",      required: true,  enabled: true },
+      email:   { label: "Email Address",   placeholder: "rahul@example.com",    required: false, enabled: true },
+      service: { label: "Concern / Service",  placeholder: "e.g. Acne, Hair Fall, Pigmentation", required: false, enabled: true },
+      message: { label: "Additional Notes",   placeholder: "Any other details you'd like to share…", required: false, enabled: true },
+    },
+    successMessage: "Thank you! We'll confirm your appointment via WhatsApp shortly.",
   },
+
+  // ── 7. HERO SECTION ───────────────────────────────────────
   hero: {
     headline: "Expert Skin Care for a Radiant You",
-    subheadline: "Board-certified dermatologists dedicated to medical and cosmetic excellence. Experience personalized treatments in a luxurious setting.",
-    ctaText: "Get Appointment",
-    // In a real app, these would be actual image paths in /public
-    imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop", 
+    subheadline: "Board-certified dermatologists dedicated to medical and cosmetic excellence. Experience personalised treatments in a luxurious setting.",
+    ctaText: "Book Appointment",
+    imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop",
   },
-  aboutDoctor: {
-    heading: "Meet Dr. Disha Baxi",
-    credentials: "(MBBS, MD, FAM)",
-    bioParagraphs: [
-      "I am an MCI recognized dermatologist from KMC Manipal. I completed my MD in Dermatology, Venereology & Leprosy from the renowned medical college at Vadodara, Gujarat in 2018.",
-      "In my 5+ years of experience, I have developed expertise in diverse fields ranging from general dermatological procedures to cosmetic dermatology, anti-aging, and non-surgical facial rejuvenation. With a Fellowship in Aesthetic Medicine (FAM), I have continuously refined my skills.",
-      "My approach is rooted in providing customized skin and hair care solutions designed for individual needs."
-    ],
-    ctaText: "Meet Dr. Disha Baxi",
-    imageUrl: "https://images.unsplash.com/photo-1594824436998-058b231b611c?q=80&w=800&auto=format&fit=crop"
-  },
+
+  // ── 8. SERVICES ───────────────────────────────────────────
   services: [
-    {
-      id: "acne",
-      title: "Acne Treatment",
-      description: "Advanced solutions for clear skin.",
-      icon: "Sparkles"
-    },
-    {
-      id: "pigmentation",
-      title: "Pigmentation Check",
-      description: "Even out your skin tone effectively.",
-      icon: "Droplets"
-    },
-    {
-      id: "anti-age",
-      title: "Anti-Ageing Services",
-      description: "Restore your youthful radiance naturally.",
-      icon: "Stethoscope"
-    },
-    {
-      id: "skin-booster",
-      title: "Skin Boosters",
-      description: "Deep hydration and luminous glow.",
-      icon: "Zap"
-    },
-    {
-      id: "chemical-peels",
-      title: "Chemical Peels",
-      description: "Rejuvenate and refresh your complexion.",
-      icon: "Droplets"
-    },
-    {
-      id: "laser-hair",
-      title: "Laser Hair Reduction",
-      description: "Safe, lasting smooth skin.",
-      icon: "Zap"
-    }
+    { id: "acne",          title: "Acne Treatment",          description: "Advanced solutions for clear, blemish-free skin.",        icon: "Sparkles"   },
+    { id: "pigmentation",  title: "Pigmentation Treatment",  description: "Even out your skin tone with targeted therapies.",        icon: "Droplets"   },
+    { id: "anti-age",      title: "Anti-Ageing Services",    description: "Restore youthful radiance with modern techniques.",       icon: "Stethoscope"},
+    { id: "skin-booster",  title: "Skin Boosters",           description: "Deep hydration treatments for a luminous glow.",          icon: "Zap"        },
+    { id: "chemical-peels",title: "Chemical Peels",          description: "Rejuvenate and refresh your complexion effectively.",     icon: "Droplets"   },
+    { id: "laser-hair",    title: "Laser Hair Reduction",    description: "Safe, long-lasting smooth skin solution.",                icon: "Zap"        },
   ],
+
+  // ── 9. TESTIMONIALS ───────────────────────────────────────
   testimonials: [
     {
       id: 1,
       name: "Diksha W.",
-      text: "The best ever doctor for skin and hair issues! I and my husband went to the doctor as I had some skin infection... she explains everything mind blowing.",
+      text: "The best ever doctor for skin and hair issues! Explains everything brilliantly. Highly recommended!",
       rating: 5,
       source: "Google"
     },
     {
       id: 2,
       name: "Abhinav Y.",
-      text: "Mam addresses skin issues very accurately and gives enough time to explain what are causes and how it can be improved. One of the best dermatologists!",
+      text: "Doctor addresses skin issues very accurately and gives enough time to understand the causes. One of the best!",
       rating: 5,
       source: "Google"
     },
     {
       id: 3,
       name: "Muskan S.",
-      text: "Excellent experience. The doctor is calm, knowledgeable, and explains everything clearly. Treatment was effective and well-planned.",
+      text: "Excellent experience. Calm, knowledgeable, and explains everything clearly. Treatment was effective and well-planned.",
       rating: 5,
       source: "Google"
     }
   ],
+
+  // ── 10. FAQs ──────────────────────────────────────────────
   faqs: [
     {
       question: "Do I need to book an appointment in advance?",
-      answer: "You're welcome to walk in, but we recommend booking an appointment in advance for a smoother, more personalized experience with minimal wait time."
+      answer: "Walk-ins are welcome, but we recommend booking in advance for a personalised experience with minimal wait time."
     },
     {
       question: "What are the consultation charges?",
-      answer: "The initial consultation is ₹500, valid for 7 days. Follow-up consultation charge after 7 days is ₹350."
+      answer: "Initial consultation is ₹500, valid for 7 days. Follow-up after 7 days is ₹350."
     },
     {
       question: "What treatments do you offer?",
-      answer: "We offer expert treatment for acne, pigmentation, tanning, vitiligo, psoriasis, hair fall, and advanced anti-aging treatments."
+      answer: "Acne, pigmentation, tanning, vitiligo, psoriasis, hair fall, and advanced anti-aging cosmetic treatments."
     },
     {
       question: "Is the clinic unisex?",
-      answer: "Yes, our clinic is a fully unisex skin clinic welcoming clients of all genders with equal warmth and expertise."
+      answer: "Yes, our clinic warmly welcomes clients of all genders."
     },
     {
       question: "Do you offer pre-wedding skin treatments?",
-      answer: "Yes, we offer customized bridal and pre-wedding skin treatments to help you look your radiant best on your big day."
+      answer: "Yes! Customised bridal and pre-wedding skin packages are available. Contact us for details."
     }
-  ]
+  ],
+
+  // ── 11. THEME / COLORS ────────────────────────────────────
+  //  Changing these re-colors the entire website instantly.
+  colors: {
+    primary:      "#4A5D4E",   // Sage green (main brand color)
+    primaryHover: "#3C4B3F",
+    accent:       "#D4AF37",   // Gold (luxury highlights)
+    background:   "#FAFAFA",
+    textMain:     "#1F2937",
+    textMuted:    "#6B7280",
+  },
 };

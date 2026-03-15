@@ -23,7 +23,7 @@ export default function AboutDoctor() {
             <div className="relative w-full max-w-[500px] aspect-[3/4] rounded-3xl overflow-hidden premium-shadow my-auto">
               <img 
                 src={imageUrl} 
-                alt="Dr. Disha Baxi Portrait"
+                alt={`${clientData.aboutDoctor.name} Portrait`}
                 className="w-full h-full object-cover object-top"
               />
               <div className="absolute inset-0 border border-white/20 rounded-3xl pointer-events-none" />

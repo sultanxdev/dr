@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { clientData } from "@/config/clientData";
 import ThemeProvider from "@/components/ThemeProvider";
+import DemoBanner from "@/components/layout/DemoBanner";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -26,7 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`} style={{ backgroundColor: 'var(--background)' }}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`} style={{ backgroundColor: 'var(--background)', paddingTop: clientData.demo.isDemo ? '42px' : '0' }}>
+        <DemoBanner />
         <ThemeProvider>
           {children}
         </ThemeProvider>
