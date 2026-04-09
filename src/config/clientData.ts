@@ -11,6 +11,50 @@
 
 export const clientData = {
 
+  // ── 0. SEO & GOOGLE INTEGRATION ───────────────────────────
+  //  ⭐ MOST IMPORTANT for Google ranking.
+  //  Fill these in as soon as the client has a live domain.
+  seo: {
+    // The live website URL — NO trailing slash.
+    // Change this when deploying to production.
+    siteUrl: "https://yourclinic.com",
+
+    // Shown in browser tab & Google results (max ~60 chars)
+    titleTemplate: "%s | Dermatologist & Skin Specialist",
+
+    // Shown under the title in Google results (max ~160 chars)
+    metaDescription:
+      "Expert dermatology clinic offering acne treatment, anti-aging, laser hair reduction, pigmentation treatment & more. Book an appointment today.",
+
+    // Keywords for Google — include city name when live
+    // Example: "dermatologist in Mumbai, skin clinic near me, acne treatment Mumbai"
+    keywords:
+      "dermatologist, skin specialist, acne treatment, pigmentation treatment, laser hair removal, anti-aging, hair fall treatment, skin clinic, dermatology clinic India",
+
+    // Open Graph share image (shown when link is shared on WhatsApp/Facebook)
+    // Create a 1200x630px image and place it in /public
+    ogImage: "/og-image.png",
+
+    // ── Google Search Console ──────────────────────────────
+    // Step 1: Go to https://search.google.com/search-console
+    // Step 2: Add property → enter your domain
+    // Step 3: Choose "HTML tag" verification
+    // Step 4: Copy ONLY the content value (the part after content=") and paste below
+    googleSiteVerification: "", // e.g. "abc123XYZ_your_token_here"
+
+    // ── Google Analytics 4 ────────────────────────────────
+    // Go to https://analytics.google.com → Admin → Create property
+    // Get the Measurement ID (starts with G-)
+    googleAnalyticsId: "", // e.g. "G-XXXXXXXXXX"
+
+    // ── Locale & Region ───────────────────────────────────
+    locale: "en_IN",  // Language_Country for Open Graph
+    region: "IN",
+
+    // Twitter/X handle (optional) — with @ sign
+    twitterHandle: "",
+  },
+
   // ── 1. DEMO / RESELLER FLAGS ──────────────────────────────
   //  Set `isDemo` to true while presenting to a prospect.
   //  A banner will appear at the top of the site.
@@ -40,7 +84,7 @@ export const clientData = {
       "Every treatment plan is tailored to the individual — because your skin is unique."
     ],
     ctaText: "Book a Consultation",
-    imageUrl: "https://images.unsplash.com/photo-1594824436998-058b231b611c?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/doctor-portrait.png",
   },
 
   // ── 4. CONTACT & LOCATION ─────────────────────────────────
