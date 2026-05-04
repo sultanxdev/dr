@@ -3,7 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { clientData } from "@/config/clientData";
 import ThemeProvider from "@/components/ThemeProvider";
-import DemoBanner from "@/components/layout/DemoBanner";
+//import DemoBanner from "@/components/layout/DemoBanner";
 import JsonLd from "@/components/JsonLd";
 
 const inter = Inter({
@@ -142,7 +142,7 @@ export default function RootLayout({
           paddingTop: clientData.demo.isDemo ? "42px" : "0",
         }}
       >
-        <DemoBanner />
+        {/*<DemoBanner />*/}
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
