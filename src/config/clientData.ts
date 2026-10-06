@@ -142,6 +142,30 @@ export const clientData = {
     { id: "laser-hair",    title: "Laser Hair Reduction",    description: "Safe, long-lasting smooth skin solution.",                icon: "Zap"        },
   ],
 
+  // ── 8B. TREATMENTS (FOR BOOKING FORM) ─────────────────────
+  //  List of treatments available for selection in the booking form
+  treatments: [
+    { id: "acne", name: "Acne Treatment" },
+    { id: "pigmentation", name: "Pigmentation Treatment" },
+    { id: "anti-age", name: "Anti-Ageing Services" },
+    { id: "skin-booster", name: "Skin Boosters" },
+    { id: "chemical-peels", name: "Chemical Peels" },
+    { id: "laser-hair", name: "Laser Hair Reduction" },
+    { id: "hair-fall", name: "Hair Fall Treatment" },
+    { id: "consultation", name: "General Consultation" },
+  ],
+
+  // ── 8C. BOOKING FORM CONFIG ───────────────────────────────
+  //  Configuration for the appointment booking system
+  booking: {
+    enabled: true,
+    formTitle: "Book Your Appointment",
+    formSubtitle: "We'll connect with you within 2 hours during working hours",
+    successMessage: "✅ Your booking has been submitted! You'll be redirected to WhatsApp now.",
+    // Set to false to disable sticky mobile CTA
+    stickyCtaEnabled: true,
+  },
+
   // ── 9. TESTIMONIALS ───────────────────────────────────────
   testimonials: [
     {

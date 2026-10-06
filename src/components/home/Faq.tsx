@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { clientData } from '@/config/clientData';
+import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
+import { whatsappMessages } from '@/lib/whatsapp';
 
 export default function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First item open by default

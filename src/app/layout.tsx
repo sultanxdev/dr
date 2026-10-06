@@ -5,6 +5,8 @@ import { clientData } from "@/config/clientData";
 import ThemeProvider from "@/components/ThemeProvider";
 //import DemoBanner from "@/components/layout/DemoBanner";
 import JsonLd from "@/components/JsonLd";
+import StickyCTA from "@/components/booking/StickyCTA";
+import FloatingWhatsApp from "@/components/whatsapp/FloatingWhatsApp";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -143,7 +145,11 @@ export default function RootLayout({
         }}
       >
         {/*<DemoBanner />*/}
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {clientData.booking.stickyCtaEnabled && <StickyCTA />}
+          <FloatingWhatsApp />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

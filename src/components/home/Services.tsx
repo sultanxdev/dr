@@ -4,6 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Stethoscope, Sparkles, Zap, Droplets } from 'lucide-react';
 import { clientData } from '@/config/clientData';
+import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
+import { getTreatmentMessage } from '@/lib/whatsapp';
 
 // Map icon strings from config to actual Lucide components
 const iconMap: Record<string, React.ReactNode> = {
@@ -91,10 +93,22 @@ export default function Services() {
                   {service.description}
                 </p>
                 
-                <div className="mt-8 pt-6 w-full flex justify-between items-center border-t border-white/10">
-                  <span className="text-white text-sm font-semibold tracking-wide uppercase flex items-center gap-2 group-hover:gap-3 transition-all duration-300">
-                    Know More <span className="text-xl leading-none">→</span>
-                  </span>
+                <div className="mt-6 pt-6 w-full flex items-center justify-between gap-3 border-t border-white/10">
+                  <WhatsAppCTA
+                    message={getTreatmentMessage(service.id)}
+                    label="Consult"
+                    variant="outline"
+                    size="sm"
+                    showIcon={true}
+                    location={`service_card_${service.id}`}
+                    className="border-white/50 text-white hover:bg-white/10 flex-1"
+                  />
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-1 text-white text-sm font-semibold tracking-wide uppercase group-hover:gap-2 transition-all duration-300 flex-1 justify-end"
+                  >
+                    Know More <span className="text-lg leading-none">→</span>
+                  </a>
                 </div>
               </motion.div>
             ))}
