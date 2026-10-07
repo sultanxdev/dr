@@ -121,11 +121,11 @@ export const clientData = {
     submitVia: "whatsapp" as "whatsapp" | "email" | "both",
     // Fields that appear in the form — set `enabled: false` to hide a field
     fields: {
-      name:    { label: "Full Name",       placeholder: "Rahul Sharma",         required: true,  enabled: true },
-      phone:   { label: "Phone Number",    placeholder: "+91 98765 00000",      required: true,  enabled: true },
-      email:   { label: "Email Address",   placeholder: "rahul@example.com",    required: false, enabled: true },
-      service: { label: "Concern / Service",  placeholder: "e.g. Acne, Hair Fall, Pigmentation", required: false, enabled: true },
-      message: { label: "Additional Notes",   placeholder: "Any other details you'd like to share…", required: false, enabled: true },
+      name: { label: "Full Name", placeholder: "Rahul Sharma", required: true, enabled: true },
+      phone: { label: "Phone Number", placeholder: "+91 98765 00000", required: true, enabled: true },
+      email: { label: "Email Address", placeholder: "rahul@example.com", required: false, enabled: true },
+      service: { label: "Concern / Service", placeholder: "e.g. Acne, Hair Fall, Pigmentation", required: false, enabled: true },
+      message: { label: "Additional Notes", placeholder: "Any other details you'd like to share…", required: false, enabled: true },
     },
     successMessage: "Thank you! We'll confirm your appointment via WhatsApp shortly.",
   },
@@ -139,16 +139,20 @@ export const clientData = {
     badge: "Now welcoming new patients",
     rating: 4.9,
     patientCount: "2,000+ happy patients",
+    note: {
+      title: "You will be heard",
+      text: "Every visit starts with a real conversation.",
+    },
   },
 
   // ── 8. SERVICES ───────────────────────────────────────────
   services: [
-    { id: "acne",          title: "Acne Treatment",          description: "Advanced solutions for clear, blemish-free skin.",        icon: "Sparkles"   },
-    { id: "pigmentation",  title: "Pigmentation Treatment",  description: "Even out your skin tone with targeted therapies.",        icon: "Droplets"   },
-    { id: "anti-age",      title: "Anti-Ageing Services",    description: "Restore youthful radiance with modern techniques.",       icon: "Stethoscope"},
-    { id: "skin-booster",  title: "Skin Boosters",           description: "Deep hydration treatments for a luminous glow.",          icon: "Zap"        },
-    { id: "chemical-peels",title: "Chemical Peels",          description: "Rejuvenate and refresh your complexion effectively.",     icon: "Droplets"   },
-    { id: "laser-hair",    title: "Laser Hair Reduction",    description: "Safe, long-lasting smooth skin solution.",                icon: "Zap"        },
+    { id: "acne", title: "Acne Treatment", description: "Advanced solutions for clear, blemish-free skin.", icon: "Sparkles" },
+    { id: "pigmentation", title: "Pigmentation Treatment", description: "Even out your skin tone with targeted therapies.", icon: "Droplets" },
+    { id: "anti-age", title: "Anti-Ageing Services", description: "Restore youthful radiance with modern techniques.", icon: "Stethoscope" },
+    { id: "skin-booster", title: "Skin Boosters", description: "Deep hydration treatments for a luminous glow.", icon: "Zap" },
+    { id: "chemical-peels", title: "Chemical Peels", description: "Rejuvenate and refresh your complexion effectively.", icon: "Droplets" },
+    { id: "laser-hair", title: "Laser Hair Reduction", description: "Safe, long-lasting smooth skin solution.", icon: "Zap" },
   ],
 
   // ── 8B. TREATMENTS (FOR BOOKING FORM) ─────────────────────
@@ -230,11 +234,11 @@ export const clientData = {
   //  Background (Warm White): #F5F6F0
   //  Accent (Coral Red): #E64435
   colors: {
-    primary:      "#4B624A",
+    primary: "#4B624A",
     primaryHover: "#3A4E39",
-    accent:       "#E64435",
-    background:   "#F5F6F0",
-    textMain:     "#4B624A",
-    textMuted:    "#4B624A",
+    accent: "#553E53",
+    background: "#F5F6F0",
+    textMain: "#4B624A",
+    textMuted: "#4B624A",
   },
 };

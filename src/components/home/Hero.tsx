@@ -1,26 +1,27 @@
 'use client';
 
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { clientData } from '@/config/clientData';
-
-/* ─── Brand Palette ───────────────────────────────────────── */
-const GREEN  = '#4B624A';
-const CREAM  = '#F5F6F0';
-const RED    = '#E64435';
 
 export default function Hero() {
   const reduce = useReducedMotion();
-  const { brand, hero } = clientData;
+  const { brand, hero, colors } = clientData;
   const phone = clientData.contact?.phone;
 
-  const container = {
+  const GREEN = colors.primary;
+  const CREAM = colors.background;
+  const RED = colors.accent;
+
+  const easeCubic: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+  const container: Variants = {
     hidden: {},
     show: { transition: { staggerChildren: reduce ? 0 : 0.12, delayChildren: 0.1 } },
   };
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: reduce ? 0 : 18 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeCubic } },
   };
 
   return (
