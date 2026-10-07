@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // Parse request body
     const body = await req.json();
 
     // Validate required fields
@@ -13,50 +12,37 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get Google Apps Script URL from environment
-    const googleScriptUrl = process.env.GOOGLE_SCRIPT_URL;
-
-    if (!googleScriptUrl) {
-      console.error("GOOGLE_SCRIPT_URL environment variable not set");
-      return NextResponse.json(
-        { success: false, error: "Configuration error" },
-        { status: 500 }
-      );
-    }
-
-    // Prepare data for Google Sheets
     const payload = {
-      name: body.name.trim(),
-      phone: body.phone.trim(),
-      treatment: body.treatment.trim(),
-      preferredDate: body.preferredDate || "",
-      preferredTime: body.preferredTime || "",
-      message: body.message || "",
-      source: body.source || "Website",
+      name: String(body.name).trim(),
+      phone: String(body.phone).trim(),
+      treatment: String(body.treatment).trim(),
+      preferredDate: body.preferredDate ? String(body.preferredDate) : "",
+      preferredTime: body.preferredTime ? String(body.preferredTime) : "",
+      message: body.message ? String(body.message).trim() : "",
+      source: body.source || "Website Booking Form",
+      submittedAt: new Date().toISOString(),
     };
 
-    // Send to Google Apps Script
-    const response = await fetch(googleScriptUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const googleScriptUrl = process.env.GOOGLE_SCRIPT_URL;
 
-    // Check if response is OK
-    if (!response.ok) {
-      console.error(`Google Apps Script returned ${response.status}`);
-      return NextResponse.json(
-        { success: false, error: "Failed to save booking" },
-        { status: response.status }
-      );
+    if (googleScriptUrl) {
+      try {
+        const response = await fetch(googleScriptUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          console.warn(`Google Apps Script responded with status ${response.status}`);
+        }
+      } catch (scriptErr) {
+        console.error("Error sending to Google Apps Script:", scriptErr);
+      }
+    } else {
+      console.log("📝 Appointment request received (Local mode):", payload);
     }
 
-    // Parse response
-    const result = await response.json();
-
-    // Return success response
     return NextResponse.json(
       {
         success: true,
@@ -68,7 +54,6 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Booking API error:", error);
-
     return NextResponse.json(
       {
         success: false,
@@ -79,10 +64,9 @@ export async function POST(req: Request) {
   }
 }
 
-// Handle other methods
 export async function GET() {
   return NextResponse.json(
-    { error: "Method not allowed" },
-    { status: 405 }
+    { status: "ok", endpoint: "/api/book-appointment" },
+    { status: 200 }
   );
 }

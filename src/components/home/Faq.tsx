@@ -22,6 +22,7 @@ export default function Faq() {
       className="relative w-full py-20 sm:py-28 lg:py-32 overflow-hidden"
       style={{ backgroundColor: BG }}
     >
+      <div id="faq" className="absolute -top-10 left-0" aria-hidden />
       {/* Decorative ambient washes */}
       <div
         aria-hidden
