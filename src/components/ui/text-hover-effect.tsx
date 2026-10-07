@@ -168,7 +168,7 @@ export function TextHoverEffect({ text, className = '' }: TextHoverEffectProps) 
                 setHovered(false);
             }}
             onPointerMove={handleMove}
-            className={`block w-full select-none transition-opacity duration-700 motion-reduce:transition-none ${ready ? 'opacity-100' : 'opacity-0'
+            className={`block w-full max-w-full overflow-hidden select-none transition-opacity duration-700 motion-reduce:transition-none ${ready ? 'opacity-100' : 'opacity-0'
                 } ${className}`}
             style={{ touchAction: 'pan-y' }}
         >

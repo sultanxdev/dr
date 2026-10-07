@@ -10,11 +10,11 @@ import Contact from '@/components/home/Contact';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col selection:bg-[var(--accent)] selection:text-white">
+    <main className="flex min-h-screen flex-col w-full max-w-full overflow-x-hidden selection:bg-[var(--accent)] selection:text-white">
       <Navbar />
       
       {/* Page Content */}
-      <div className="flex-grow">
+      <div className="flex-grow w-full max-w-full overflow-x-hidden">
         <Hero />
         <Services />
         <AboutDoctor />

@@ -5,9 +5,9 @@ import { motion, useReducedMotion, type Easing } from 'framer-motion';
 import { clientData } from '@/config/clientData';
 
 /* ─── Brand Palette ───────────────────────────────────────── */
-const GREEN  = clientData.colors.primary;
-const CREAM  = clientData.colors.background;
-const RED    = clientData.colors.accent;
+const GREEN = clientData.colors.primary;
+const CREAM = clientData.colors.background;
+const RED = clientData.colors.accent;
 
 const GAP = 24;
 const EASE: Easing = [0.22, 1, 0.36, 1];
@@ -139,7 +139,7 @@ export default function Testimonials() {
             tabIndex={0}
             role="region"
             aria-label="Patient testimonials"
-            className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-6 sm:mx-0 sm:gap-6 sm:px-0 focus-visible:outline focus-visible:outline-2"
+            className="w-full max-w-full flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6 sm:gap-6 no-scrollbar focus-visible:outline focus-visible:outline-2"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', outlineColor: CREAM }}
           >
             {items.map((testimonial, index) => {
