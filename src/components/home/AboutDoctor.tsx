@@ -5,9 +5,9 @@ import { motion, useReducedMotion, type Easing } from 'framer-motion';
 import { clientData } from '@/config/clientData';
 
 /* ─── Brand Palette ───────────────────────────────────────── */
-const GREEN  = '#4B624A';
-const CREAM  = '#F5F6F0';
-const RED    = '#E64435';
+const GREEN  = clientData.colors.primary;
+const CREAM  = clientData.colors.background;
+const RED    = clientData.colors.accent;
 
 const EASE: Easing = [0.22, 1, 0.36, 1];
 
@@ -122,10 +122,10 @@ export default function AboutDoctor() {
             <motion.dl
               {...reveal(0.25)}
               className="mt-10 grid max-w-xl grid-cols-3 divide-x py-5 border-y"
-              style={{ borderColor: `${GREEN}15`, divideColor: `${GREEN}15` }}
+              style={{ borderColor: `${GREEN}25` }}
             >
               {highlights.slice(0, 3).map((h) => (
-                <div key={h.label} className="px-4 first:pl-0">
+                <div key={h.label} className="px-4 first:pl-0" style={{ borderColor: `${GREEN}25` }}>
                   <dd className="font-serif text-2xl font-bold sm:text-3xl" style={{ color: RED }}>
                     {h.value}
                   </dd>

@@ -205,7 +205,7 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0, y: reduce ? 0 : 16, rotate: -3 }}
               animate={{ opacity: 1, y: 0, rotate: -3 }}
-              transition={{ duration: 0.7, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, delay: 0.9, ease: easeCubic }}
               className="absolute -bottom-6 -left-2 max-w-[15rem] rounded-2xl bg-white p-4 shadow-xl sm:-left-6 lg:-left-10"
               style={{ border: '1px solid rgba(75, 98, 74, 0.06)' }}
             >
