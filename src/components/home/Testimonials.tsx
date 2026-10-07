@@ -1,119 +1,214 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Star, ChevronLeft, ChevronRight, BadgeCheck } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { clientData } from '@/config/clientData';
 
+const SAGE = '#5B7F6D';
+const SAGE_DEEP = '#3F5C4D';
+const MIST = '#E8F1EC';
+const GOLD = '#E0A82E';
+const GAP = 24;
+
+/**
+ * Optional fields on each testimonial (shown only when present):
+ *  date       -> '2 months ago' or 'March 2026'
+ *  source     -> 'Google'
+ *  treatment  -> 'Acne scar treatment'
+ */
+type Extra = { date?: string; source?: string; treatment?: string };
+
 export default function Testimonials() {
+  const reduce = useReducedMotion();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+
+  const items = clientData.testimonials;
+  const average = items.length
+    ? items.reduce((sum, t) => sum + t.rating, 0) / items.length
+    : 0;
+
+  const update = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setProgress(max > 0 ? el.scrollLeft / max : 1);
+    setCanPrev(el.scrollLeft > 4);
+    setCanNext(el.scrollLeft < max - 4);
+  }, []);
+
+  useEffect(() => {
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [update]);
 
   const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollTo = direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth;
-      scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    }
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.querySelector('article');
+    const step = (card?.clientWidth ?? el.clientWidth) + GAP;
+    el.scrollBy({ left: direction === 'left' ? -step : step, behavior: reduce ? 'auto' : 'smooth' });
   };
 
   return (
-    <section id="testimonials" className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-          <div>
-            <h2 className="text-sm font-semibold tracking-wider uppercase mb-3" style={{ color: 'var(--accent)' }}>
-              Happy Stories
+    <section
+      id="testimonials"
+      className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8 lg:py-32"
+      style={{ backgroundColor: SAGE_DEEP }}
+    >
+      {/* Soft glow */}
+      <div
+        aria-hidden
+        className="absolute -right-32 -top-32 h-96 w-96 rounded-full opacity-20 blur-3xl"
+        style={{ backgroundColor: SAGE }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="mb-12 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+          <motion.div
+            initial={{ opacity: 0, y: reduce ? 0 : 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+          >
+            <h2 className="font-serif text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl">
+              What our patients say
             </h2>
-            <h3 className="text-4xl md:text-5xl font-serif font-bold" style={{ color: 'var(--textMain)' }}>
-              Real Results & Experiences
-            </h3>
-          </div>
-          <div className="flex gap-4 mt-6 md:mt-0">
-            <button 
-              onClick={() => scroll('left')}
-              className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors premium-shadow"
-              aria-label="Previous Testimonials"
-            >
-              <ChevronLeft className="text-gray-600" />
-            </button>
-            <button 
-              onClick={() => scroll('right')}
-              className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors premium-shadow"
-              aria-label="Next Testimonials"
-            >
-              <ChevronRight className="text-gray-600" />
-            </button>
+            {items.length > 0 && (
+              <div className="mt-5 flex items-center gap-3 text-white/80">
+                <span className="flex" aria-hidden>
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star key={i} size={18} fill={GOLD} stroke={GOLD} />
+                  ))}
+                </span>
+                <p className="text-base">
+                  <span className="font-semibold text-white">{average.toFixed(1)}</span> out of 5
+                  across {items.length} patient stories
+                </p>
+              </div>
+            )}
+          </motion.div>
+
+          <div className="flex gap-3">
+            {(['left', 'right'] as const).map((dir) => {
+              const disabled = dir === 'left' ? !canPrev : !canNext;
+              const Icon = dir === 'left' ? ChevronLeft : ChevronRight;
+              return (
+                <button
+                  key={dir}
+                  onClick={() => scroll(dir)}
+                  disabled={disabled}
+                  aria-label={dir === 'left' ? 'Previous testimonials' : 'Next testimonials'}
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 text-white transition duration-200 hover:bg-white hover:text-[#3F5C4D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-white"
+                >
+                  <Icon size={22} />
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8 }}
-          className="relative"
-        >
-          <div 
+        <div className="relative">
+          <div
             ref={scrollRef}
-            className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 -mx-4 px-4 sm:mx-0 sm:px-0"
+            onScroll={update}
+            tabIndex={0}
+            role="region"
+            aria-label="Patient testimonials"
+            className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:mx-0 sm:px-0"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {clientData.testimonials.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="min-w-[320px] md:min-w-[400px] max-w-[450px] flex-shrink-0 snap-start bg-white rounded-[2rem] p-8 premium-shadow border border-gray-100 flex flex-col relative transition-transform duration-300 hover:-translate-y-1"
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #e5e7eb 2px, transparent 2px)',
-                  backgroundSize: '24px 24px',
-                  backgroundPosition: 'top right',
-                }}
-              >
-                {/* Header: Avatar, Name, Google Logo */}
-                <div className="flex justify-between items-start mb-6 bg-white/80 backdrop-blur-sm rounded-lg relative z-10 w-fit pr-4">
-                  <div className="flex items-center gap-4">
-                    <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                      style={{ backgroundColor: '#5B7F6D' }}
+            {items.map((testimonial, index) => {
+              const extra = testimonial as typeof testimonial & Extra;
+              return (
+                <motion.article
+                  key={testimonial.id}
+                  initial={{ opacity: 0, x: reduce ? 0 : 48 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '0px 0px -40px 0px' }}
+                  transition={{ duration: 0.7, delay: reduce ? 0 : Math.min(index, 3) * 0.1, ease: 'easeOut' }}
+                  className="relative flex w-[85%] shrink-0 snap-start flex-col rounded-3xl bg-white p-8 shadow-xl shadow-black/10 sm:w-[400px]"
+                >
+                  {/* Quote mark */}
+                  <Quote aria-hidden size={36} className="mb-4" fill={SAGE} stroke="none" opacity={0.25} />
+
+                  {/* Stars fill in one by one as the card appears */}
+                  <div className="mb-4 flex gap-0.5" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, scale: reduce ? 1 : 0.3, rotate: reduce ? 0 : -30 }}
+                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: reduce ? 0 : 0.35 + i * 0.08, type: 'spring', stiffness: 400, damping: 14 }}
+                        className="flex"
+                      >
+                        <Star size={18} fill={GOLD} stroke={GOLD} />
+                      </motion.span>
+                    ))}
+                  </div>
+
+                  <p className="flex-grow text-lg leading-relaxed text-gray-800">
+                    {testimonial.text}
+                  </p>
+
+                  {extra.treatment && (
+                    <p
+                      className="mt-5 w-fit rounded-full px-3 py-1 text-sm font-medium"
+                      style={{ backgroundColor: MIST, color: SAGE_DEEP }}
+                    >
+                      {extra.treatment}
+                    </p>
+                  )}
+
+                  <div className="mt-6 flex items-center gap-4 border-t border-gray-100 pt-5">
+                    <div
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-bold text-white"
+                      style={{ backgroundColor: SAGE }}
+                      aria-hidden
                     >
                       {testimonial.name.charAt(0)}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-500">2 months ago</p>
+                    <div className="leading-tight">
+                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                      {(extra.date || extra.source) && (
+                        <p className="mt-0.5 text-sm text-gray-500">
+                          {[extra.date, extra.source && `on ${extra.source}`].filter(Boolean).join(', ')}
+                        </p>
+                      )}
                     </div>
                   </div>
-                </div>
-
-                {/* Simulated Google 'G' icon placed absolute to bypass backdrop blur */}
-                <div className="absolute top-8 right-8 w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center pointer-events-none">
-                  <span className="text-blue-600 font-bold" style={{ fontFamily: 'sans-serif' }}>G</span>
-                </div>
-
-                <div className="flex items-center mb-4 gap-2 relative z-10">
-                  <div className="flex">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-200">
-                    <BadgeCheck size={14} className="text-blue-500" />
-                    Verified
-                  </div>
-                </div>
-                
-                <p className="text-gray-700 text-lg leading-relaxed flex-grow relative z-10">
-                  "{testimonial.text}"
-                </p>
-              </div>
-            ))}
+                </motion.article>
+              );
+            })}
           </div>
-        </motion.div>
+
+          {/* Fade hints that there is more to the right */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 hidden w-20 sm:block"
+            style={{ background: `linear-gradient(to left, ${SAGE_DEEP}, transparent)` }}
+          />
+        </div>
+
+        {/* Scroll progress */}
+        <div className="mt-4 h-1 w-full max-w-xs overflow-hidden rounded-full bg-white/20" aria-hidden>
+          <div
+            className="h-full rounded-full bg-white transition-[width] duration-200"
+            style={{ width: `${Math.max(12, progress * 100)}%` }}
+          />
+        </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html: `
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}} />
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `#testimonials [role="region"]::-webkit-scrollbar{display:none}`,
+        }}
+      />
     </section>
   );
 }

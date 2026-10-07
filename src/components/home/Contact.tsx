@@ -1,95 +1,146 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { MapPin, Phone, Mail, Clock, ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { clientData } from '@/config/clientData';
 import BookingForm from '@/components/booking/BookingForm';
 
+const SAGE = '#5B7E6F';
+const SAGE_DEEP = '#3F5C4D';
+const MIST = '#E8F1EC';
+
+type Row = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href?: string;
+  action?: string;
+  external?: boolean;
+};
+
 export default function Contact() {
-  const { contact } = clientData;
+  const reduce = useReducedMotion();
+  // mapUrl is optional in clientData.contact; otherwise we build a search link from the address
+  const contact = clientData.contact as typeof clientData.contact & { mapUrl?: string };
+  const mapUrl =
+    contact.mapUrl ??
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`;
+
+  const rows: Row[] = [
+    {
+      icon: Phone,
+      label: 'Call us',
+      value: contact.phone,
+      href: `tel:${contact.phone.replace(/\s/g, '')}`,
+      action: 'Call now',
+    },
+    {
+      icon: MapPin,
+      label: 'Visit the clinic',
+      value: contact.address,
+      href: mapUrl,
+      action: 'Get directions',
+      external: true,
+    },
+    { icon: Clock, label: 'Opening hours', value: contact.workingHours },
+    {
+      icon: Mail,
+      label: 'Email',
+      value: contact.email,
+      href: `mailto:${contact.email}`,
+      action: 'Write to us',
+    },
+  ];
+
+  const list: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: reduce ? 0 : 0.1, delayChildren: 0.15 } },
+  };
+  const row: Variants = {
+    hidden: { opacity: 0, y: reduce ? 0 : 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
 
   return (
-    <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-
-          {/* Contact Info Column */}
+    <section
+      id="contact"
+      className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8 lg:py-32"
+      style={{ backgroundColor: MIST }}
+    >
+      <div className="relative mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-12 lg:gap-16">
+          {/* Left: a human invitation plus the details */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="flex flex-col justify-center"
+            variants={list}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            className="lg:col-span-5 lg:pt-6"
           >
-            <h2 className="text-sm font-semibold tracking-wider uppercase mb-3" style={{ color: 'var(--accent)' }}>
-              Get In Touch
-            </h2>
-            <h3 className="text-4xl md:text-5xl font-serif font-bold mb-8" style={{ color: 'var(--textMain)' }}>
-              Begin Your Skin Journey Today.
-            </h3>
+            <motion.h2
+              variants={row}
+              className="font-serif text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl"
+              style={{ color: 'var(--textMain)' }}
+            >
+              Let&rsquo;s talk about your skin
+            </motion.h2>
+            <motion.p
+              variants={row}
+              className="mt-6 max-w-md text-lg leading-relaxed text-gray-600"
+            >
+              Tell us what is bothering you, whether it is medical or cosmetic. We will suggest
+              the right next step.
+            </motion.p>
 
-            <p className="text-gray-600 text-lg mb-12 max-w-md leading-relaxed">
-              Schedule a consultation with our experts to discuss your medical or cosmetic skincare goals.
-            </p>
-
-            <ul className="space-y-8">
-              <li className="flex items-start">
-                <div className="mt-1 mr-4 bg-gray-50 p-3 rounded-full text-[var(--primary)] border border-gray-100">
-                  <MapPin size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg mb-1" style={{ color: 'var(--textMain)' }}>Our Clinic</h4>
-                  <p className="text-gray-600">{contact.address}</p>
-                </div>
-              </li>
-
-              <li className="flex items-start">
-                <div className="mt-1 mr-4 bg-gray-50 p-3 rounded-full text-[var(--primary)] border border-gray-100">
-                  <Clock size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg mb-1" style={{ color: 'var(--textMain)' }}>Hours</h4>
-                  <p className="text-gray-600">{contact.workingHours}</p>
-                </div>
-              </li>
-
-              <li className="flex items-start">
-                <div className="mt-1 mr-4 bg-gray-50 p-3 rounded-full text-[var(--primary)] border border-gray-100">
-                  <Phone size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg mb-1" style={{ color: 'var(--textMain)' }}>Call Us</h4>
-                  <a href={`tel:${contact.phone}`} className="text-gray-600 hover:text-[var(--primary)] transition-colors">
-                    {contact.phone}
-                  </a>
-                </div>
-              </li>
-
-              <li className="flex items-start">
-                <div className="mt-1 mr-4 bg-gray-50 p-3 rounded-full text-[var(--primary)] border border-gray-100">
-                  <Mail size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg mb-1" style={{ color: 'var(--textMain)' }}>Email</h4>
-                  <a href={`mailto:${contact.email}`} className="text-gray-600 hover:text-[var(--primary)] transition-colors">
-                    {contact.email}
-                  </a>
-                </div>
-              </li>
+            <ul className="mt-10 divide-y divide-[#5B7E6F]/15 border-y border-[#5B7E6F]/15">
+              {rows.map(({ icon: Icon, label, value, href, action, external }) => (
+                <motion.li key={label} variants={row} className="flex items-start gap-4 py-5">
+                  <span
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-black/5"
+                    style={{ color: SAGE }}
+                    aria-hidden
+                  >
+                    <Icon size={22} strokeWidth={1.75} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-gray-500">{label}</p>
+                    <p
+                      className="mt-0.5 whitespace-pre-line break-words text-lg font-medium leading-snug"
+                      style={{ color: 'var(--textMain)' }}
+                    >
+                      {value}
+                    </p>
+                    {href && action && (
+                      <a
+                        href={href}
+                        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        className="mt-1.5 inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+                        style={{ color: SAGE_DEEP, outlineColor: SAGE_DEEP }}
+                      >
+                        {action}
+                        <ArrowUpRight size={15} aria-hidden />
+                      </a>
+                    )}
+                  </div>
+                </motion.li>
+              ))}
             </ul>
           </motion.div>
 
-          {/* Booking Form Column */}
+          {/* Right: booking form */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true, margin: "-100px" }}
+            initial={{ opacity: 0, y: reduce ? 0 : 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+            className="lg:col-span-7"
           >
-            <BookingForm />
+            {/* If BookingForm already has its own card styling, remove this wrapper's bg/shadow */}
+            <div className="rounded-3xl bg-white shadow-2xl shadow-emerald-900/10 ring-1 ring-black/5">
+              <BookingForm />
+            </div>
           </motion.div>
-
         </div>
       </div>
     </section>
