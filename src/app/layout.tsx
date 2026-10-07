@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { clientData } from "@/config/clientData";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -15,6 +15,11 @@ const inter = Inter({
 
 const playfair = Playfair_Display({
   variable: "--font-serif",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -138,7 +143,7 @@ export default function RootLayout({
         )}
       </head>
       <body
-        className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
+        className={`${inter.variable} ${playfair.variable} ${geistMono.variable} font-sans antialiased`}
         style={{
           backgroundColor: "var(--background)",
           paddingTop: clientData.demo.isDemo ? "42px" : "0",
