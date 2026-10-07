@@ -95,13 +95,13 @@ export const clientData = {
 
   // ── 4. CONTACT & LOCATION ─────────────────────────────────
   contact: {
-    phone: "+91 98765 00000",
+    phone: "+91 9111951752",
     email: "appointments@yourclinic.com",
     address: "Your Clinic Address, City, State – 000000",
     workingHours: "Mon – Sat: 10:00 AM – 7:00 PM",
     // WhatsApp number (digits only, with country code, no + sign, no spaces)
     // Used for form submission →  data is sent as a pre-filled WhatsApp message
-    whatsappNumber: "919876500000",
+    whatsappNumber: "9111951752",
   },
 
   // ── 5. SOCIAL LINKS ───────────────────────────────────────
@@ -110,7 +110,7 @@ export const clientData = {
     instagram: "https://instagram.com",
     facebook: "https://facebook.com",
     linkedin: "",
-    whatsapp: "https://wa.me/919876500000",
+    whatsapp: "https://wa.me/919111951752",
   },
 
   // ── 6. APPOINTMENT FORM ───────────────────────────────────
