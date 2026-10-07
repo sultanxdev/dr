@@ -61,7 +61,7 @@ export default function AboutDoctor() {
 
             {(name || role) && (
               <div
-                className="absolute -bottom-6 -right-2 max-w-[16rem] rounded-2xl bg-white px-5 py-4 shadow-xl sm:-right-8"
+                className="absolute -bottom-6 right-2 sm:right-4 max-w-[16rem] rounded-2xl bg-white px-5 py-4 shadow-xl"
                 style={{ border: '1px solid rgba(75, 98, 74, 0.06)' }}
               >
                 {name && <p className="font-serif text-lg font-bold" style={{ color: GREEN }}>{name}</p>}
