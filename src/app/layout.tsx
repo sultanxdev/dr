@@ -143,9 +143,10 @@ export default function RootLayout({
         )}
       </head>
       <body
-        className={`${inter.variable} ${playfair.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${geistMono.variable} ${inter.variable} ${playfair.variable} ${clientData.typography.className} antialiased`}
         style={{
           backgroundColor: clientData.colors.background,
+          fontFamily: clientData.typography.fontFamily,
         }}
       >
         <ThemeProvider>

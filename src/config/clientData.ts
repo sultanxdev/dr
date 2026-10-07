@@ -241,4 +241,13 @@ export const clientData = {
     textMain: "#4B624A",
     textMuted: "#4B624A",
   },
+
+  // ── 12. TYPOGRAPHY ─────────────────────────────────────────
+  //  Site-wide font configuration
+  typography: {
+    fontName: "Geist Mono",
+    fontFamily: "var(--font-mono), 'Geist Mono', monospace",
+    googleFontUrl: "https://fonts.google.com/specimen/Geist+Mono",
+    className: "font-mono",
+  },
 };
