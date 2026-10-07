@@ -184,11 +184,11 @@ export default function Hero() {
             {/* Offset outline */}
             <div
               aria-hidden
-              className="absolute inset-0 translate-x-4 translate-y-4 rounded-t-[999px] rounded-b-[2.5rem] border-2"
+              className="absolute inset-0 -translate-x-4 translate-y-4 rounded-[2.5rem] rounded-tl-[999px] border-2"
               style={{ borderColor: GREEN }}
             />
             <div
-              className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2.5rem] shadow-2xl"
+              className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] rounded-tl-[999px] shadow-2xl"
               style={{
                 backgroundColor: 'white',
                 boxShadow: `0 25px 60px -12px rgba(75, 98, 74, 0.25)`,
