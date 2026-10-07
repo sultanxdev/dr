@@ -145,11 +145,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} ${geistMono.variable} font-sans antialiased`}
         style={{
-          backgroundColor: "var(--background)",
-          paddingTop: clientData.demo.isDemo ? "42px" : "0",
+          backgroundColor: clientData.colors.background,
         }}
       >
-        {/*<DemoBanner />*/}
         <ThemeProvider>
           {clientData.booking.stickyCtaEnabled && <StickyCTA />}
           <FloatingWhatsApp />

@@ -1,14 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { motion, useReducedMotion, type Variants, type Easing } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { clientData } from '@/config/clientData';
 import BookingForm from '@/components/booking/BookingForm';
 
-const SAGE = '#5B7E6F';
-const SAGE_DEEP = '#3F5C4D';
-const MIST = '#E8F1EC';
+const EASE: Easing = [0.22, 1, 0.36, 1];
 
 type Row = {
   icon: LucideIcon;
@@ -21,16 +19,20 @@ type Row = {
 
 export default function Contact() {
   const reduce = useReducedMotion();
-  // mapUrl is optional in clientData.contact; otherwise we build a search link from the address
-  const contact = clientData.contact as typeof clientData.contact & { mapUrl?: string };
+  const { colors, contact } = clientData;
+
+  const PRIMARY = colors.primary;
+  const BG = colors.background;
+  const ACCENT = colors.accent;
+
   const mapUrl =
-    contact.mapUrl ??
+    (contact as { mapUrl?: string }).mapUrl ??
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`;
 
   const rows: Row[] = [
     {
       icon: Phone,
-      label: 'Call us',
+      label: 'Call us directly',
       value: contact.phone,
       href: `tel:${contact.phone.replace(/\s/g, '')}`,
       action: 'Call now',
@@ -43,10 +45,14 @@ export default function Contact() {
       action: 'Get directions',
       external: true,
     },
-    { icon: Clock, label: 'Opening hours', value: contact.workingHours },
+    {
+      icon: Clock,
+      label: 'Consultation hours',
+      value: contact.workingHours || 'Mon – Sat: 10:00 AM – 7:00 PM',
+    },
     {
       icon: Mail,
-      label: 'Email',
+      label: 'Email inquiry',
       value: contact.email,
       href: `mailto:${contact.email}`,
       action: 'Write to us',
@@ -55,59 +61,99 @@ export default function Contact() {
 
   const list: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: reduce ? 0 : 0.1, delayChildren: 0.15 } },
+    visible: { transition: { staggerChildren: reduce ? 0 : 0.08, delayChildren: 0.1 } },
   };
   const row: Variants = {
     hidden: { opacity: 0, y: reduce ? 0 : 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
   };
 
   return (
     <section
       id="contact"
-      className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8 lg:py-32"
-      style={{ backgroundColor: MIST }}
+      className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32"
+      style={{ backgroundColor: BG }}
     >
-      <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-12 lg:gap-16">
-          {/* Left: a human invitation plus the details */}
+      {/* Decorative ambient background */}
+      <div
+        aria-hidden
+        className="absolute top-1/2 -left-24 h-96 w-96 rounded-full opacity-10 blur-3xl pointer-events-none"
+        style={{ backgroundColor: PRIMARY }}
+      />
+      <div
+        aria-hidden
+        className="absolute bottom-0 right-0 h-96 w-96 rounded-full opacity-10 blur-3xl pointer-events-none"
+        style={{ backgroundColor: ACCENT }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-14">
+          
+          {/* Left: Contact Info */}
           <motion.div
             variants={list}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
-            className="lg:col-span-5 lg:pt-6"
+            className="lg:col-span-5 lg:pt-4"
           >
+            <motion.div variants={row}>
+              <span
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-mono font-medium tracking-wider uppercase mb-4"
+                style={{
+                  backgroundColor: `${PRIMARY}10`,
+                  color: ACCENT,
+                }}
+              >
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACCENT }} />
+                Get In Touch
+              </span>
+            </motion.div>
+
             <motion.h2
               variants={row}
-              className="font-serif text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl"
-              style={{ color: 'var(--textMain)' }}
+              className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.12] tracking-tight"
+              style={{ color: PRIMARY }}
             >
               Let&rsquo;s talk about your skin
             </motion.h2>
+
             <motion.p
               variants={row}
-              className="mt-6 max-w-md text-lg leading-relaxed text-gray-600"
+              className="mt-4 text-base sm:text-lg leading-relaxed max-w-md"
+              style={{ color: `${PRIMARY}CC` }}
             >
-              Tell us what is bothering you, whether it is medical or cosmetic. We will suggest
-              the right next step.
+              Tell us what is bothering you, whether it is medical or cosmetic. Our team will guide you
+              to the right doctor consultation.
             </motion.p>
 
-            <ul className="mt-10 divide-y divide-[#5B7E6F]/15 border-y border-[#5B7E6F]/15">
+            <ul className="mt-8 sm:mt-10 divide-y border-y" style={{ borderColor: `${PRIMARY}15` }}>
               {rows.map(({ icon: Icon, label, value, href, action, external }) => (
-                <motion.li key={label} variants={row} className="flex items-start gap-4 py-5">
+                <motion.li
+                  key={label}
+                  variants={row}
+                  className="flex items-start gap-4 py-4 sm:py-5"
+                  style={{ borderColor: `${PRIMARY}15` }}
+                >
                   <span
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-black/5"
-                    style={{ color: SAGE }}
+                    className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl shadow-sm"
+                    style={{
+                      backgroundColor: 'white',
+                      color: PRIMARY,
+                      border: `1px solid ${PRIMARY}15`,
+                    }}
                     aria-hidden
                   >
-                    <Icon size={22} strokeWidth={1.75} />
+                    <Icon size={20} strokeWidth={1.75} />
                   </span>
+
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-gray-500">{label}</p>
+                    <p className="text-xs sm:text-sm font-medium" style={{ color: `${PRIMARY}80` }}>
+                      {label}
+                    </p>
                     <p
-                      className="mt-0.5 whitespace-pre-line break-words text-lg font-medium leading-snug"
-                      style={{ color: 'var(--textMain)' }}
+                      className="mt-0.5 whitespace-pre-line break-words text-base sm:text-lg font-medium leading-snug"
+                      style={{ color: PRIMARY }}
                     >
                       {value}
                     </p>
@@ -115,11 +161,11 @@ export default function Contact() {
                       <a
                         href={href}
                         {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                        className="mt-1.5 inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
-                        style={{ color: SAGE_DEEP, outlineColor: SAGE_DEEP }}
+                        className="mt-1.5 inline-flex items-center gap-1 text-xs sm:text-sm font-semibold transition-opacity hover:opacity-80"
+                        style={{ color: ACCENT }}
                       >
                         {action}
-                        <ArrowUpRight size={15} aria-hidden />
+                        <ArrowUpRight size={14} aria-hidden />
                       </a>
                     )}
                   </div>
@@ -128,16 +174,22 @@ export default function Contact() {
             </ul>
           </motion.div>
 
-          {/* Right: booking form */}
+          {/* Right: Booking Form */}
           <motion.div
-            initial={{ opacity: 0, y: reduce ? 0 : 32 }}
+            initial={{ opacity: 0, y: reduce ? 0 : 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+            transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
             className="lg:col-span-7"
           >
-            {/* If BookingForm already has its own card styling, remove this wrapper's bg/shadow */}
-            <div className="rounded-3xl bg-white shadow-2xl shadow-emerald-900/10 ring-1 ring-black/5">
+            <div
+              className="rounded-3xl p-1 sm:p-2 shadow-2xl transition-all"
+              style={{
+                backgroundColor: 'white',
+                border: `1px solid ${PRIMARY}15`,
+                boxShadow: `0 20px 40px -15px ${PRIMARY}18`,
+              }}
+            >
               <BookingForm />
             </div>
           </motion.div>

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { MessageCircle } from "lucide-react";
 import { createWhatsAppLink } from "@/lib/whatsapp";
 import { clientData } from "@/config/clientData";
@@ -12,13 +13,9 @@ interface WhatsAppCTAProps {
   variant?: "primary" | "secondary" | "outline";
   size?: "sm" | "md" | "lg";
   showIcon?: boolean;
-  location?: string; // For analytics tracking
+  location?: string;
 }
 
-/**
- * Reusable WhatsApp CTA Button
- * Can be used in sections, cards, CTAs, etc.
- */
 export default function WhatsAppCTA({
   message,
   label = "Chat on WhatsApp",
@@ -28,24 +25,39 @@ export default function WhatsAppCTA({
   showIcon = true,
   location = "generic",
 }: WhatsAppCTAProps) {
+  const { colors, contact } = clientData;
+  const PRIMARY = colors.primary;
+  const BG = colors.background;
+  const ACCENT = colors.accent;
+
   const handleClick = () => {
     trackWhatsAppClick(location);
   };
 
-  const link = createWhatsAppLink(clientData.contact.whatsappNumber, message);
+  const link = createWhatsAppLink(contact.whatsappNumber, message);
 
-  // Size classes
   const sizeClasses = {
-    sm: "px-3 py-2 text-sm gap-1",
-    md: "px-4 py-3 text-base gap-2",
-    lg: "px-6 py-4 text-lg gap-3",
+    sm: "px-3.5 py-2 text-xs sm:text-sm gap-1.5",
+    md: "px-5 py-2.5 text-sm sm:text-base gap-2",
+    lg: "px-6 py-3.5 text-base sm:text-lg gap-2.5",
   };
 
-  // Variant classes
-  const variantClasses = {
-    primary: "bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl",
-    secondary: "bg-teal-600 hover:bg-teal-700 text-white shadow-lg hover:shadow-xl",
-    outline: "border-2 border-green-500 text-green-500 hover:bg-green-50",
+  const variantStyles = {
+    primary: {
+      backgroundColor: PRIMARY,
+      color: BG,
+      border: "none",
+    },
+    secondary: {
+      backgroundColor: ACCENT,
+      color: BG,
+      border: "none",
+    },
+    outline: {
+      backgroundColor: "transparent",
+      color: PRIMARY,
+      border: `1px solid ${PRIMARY}33`,
+    },
   };
 
   return (
@@ -54,25 +66,12 @@ export default function WhatsAppCTA({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
-      className={`
-        inline-flex
-        items-center
-        justify-center
-        rounded-lg
-        font-semibold
-        transition-all
-        duration-300
-        transform
-        hover:scale-105
-        active:scale-95
-        ${sizeClasses[size]}
-        ${variantClasses[variant]}
-        ${className}
-      `}
+      style={variantStyles[variant]}
+      className={`inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 hover:opacity-90 active:scale-95 shadow-sm ${sizeClasses[size]} ${className}`}
       title="Start WhatsApp conversation"
       aria-label={label}
     >
-      {showIcon && <MessageCircle size={20} />}
+      {showIcon && <MessageCircle size={size === "sm" ? 16 : size === "lg" ? 22 : 18} />}
       <span>{label}</span>
     </a>
   );

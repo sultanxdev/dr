@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { clientData } from '@/config/clientData';
 
 /* ─── Brand Palette ───────────────────────────────────────── */
-const GREEN  = '#4B624A';
-const CREAM  = '#F5F6F0';
-const RED    = '#E64435';
+const GREEN  = clientData.colors.primary;
+const CREAM  = clientData.colors.background;
+const RED    = clientData.colors.accent;
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);

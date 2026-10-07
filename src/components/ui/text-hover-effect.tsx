@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { clientData } from '@/config/clientData';
 
 interface TextHoverEffectProps {
     text: string;
@@ -174,8 +175,8 @@ export function TextHoverEffect({ text, className = '' }: TextHoverEffectProps) 
             <defs>
                 {/* Base fill: one flat tone */}
                 <linearGradient id={baseId} gradientUnits="userSpaceOnUse" x1="0" y1={vb.y} x2="0" y2={vb.y + vb.h}>
-                    <stop offset="0%" stopColor="#4B624A" stopOpacity="0.12" />
-                    <stop offset="100%" stopColor="#4B624A" stopOpacity="0.12" />
+                    <stop offset="0%" stopColor={clientData.colors.primary} stopOpacity="0.12" />
+                    <stop offset="100%" stopColor={clientData.colors.primary} stopOpacity="0.12" />
                 </linearGradient>
 
                 {/* Spotlight fill: brand green into accent */}
@@ -187,8 +188,8 @@ export function TextHoverEffect({ text, className = '' }: TextHoverEffectProps) 
                     x2={vb.x + vb.w}
                     y2={vb.y + vb.h}
                 >
-                    <stop offset="0%" stopColor="#4B624A" />
-                    <stop offset="100%" stopColor="#E64435" />
+                    <stop offset="0%" stopColor={clientData.colors.primary} />
+                    <stop offset="100%" stopColor={clientData.colors.accent} />
                 </linearGradient>
 
                 <radialGradient

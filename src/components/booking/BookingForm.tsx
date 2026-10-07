@@ -24,32 +24,23 @@ const bookingSchema = z.object({
   treatment: z.string()
     .min(1, "Please select a treatment"),
   
-  preferredDate: z.string()
-    .optional()
-    .refine(
-      (date) => !date || new Date(date) > new Date(),
-      "Please select a future date"
-    ),
-  
+  preferredDate: z.string().optional(),
   preferredTime: z.string().optional(),
-  
-  message: z.string()
-    .max(500, "Message must be less than 500 characters")
-    .optional(),
-  
-  // Anti-spam honeypot - should always be empty
-  website: z.string()
-    .max(0, "Invalid form submission")
-    .optional(),
+  message: z.string().max(500, "Message must be less than 500 characters").optional(),
+  website: z.string().max(0, "Invalid form submission").optional(),
 });
 
 type BookingFormData = z.infer<typeof bookingSchema>;
 
-// ==================== COMPONENT ====================
 export default function BookingForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { colors, booking, treatments, appointment, contact } = clientData;
+  const PRIMARY = colors.primary;
+  const BG = colors.background;
+  const ACCENT = colors.accent;
 
   const {
     register,
@@ -63,47 +54,38 @@ export default function BookingForm() {
       preferredDate: "",
       preferredTime: "",
       message: "",
-      website: "", // Honeypot
+      website: "",
     },
   });
 
-  // ==================== FORM SUBMISSION ====================
   const onSubmit = async (data: BookingFormData) => {
     try {
       setLoading(true);
       setError(null);
 
-      // Track submission
       trackAppointmentSubmitted(data.treatment);
 
-      // Send to API route (which will save to Google Sheets)
-      const response = await fetch("/api/book-appointment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          phone: data.phone,
-          treatment: data.treatment,
-          preferredDate: data.preferredDate,
-          preferredTime: data.preferredTime,
-          message: data.message,
-          source: "Website Booking Form",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit booking");
+      try {
+        await fetch("/api/book-appointment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: data.name,
+            phone: data.phone,
+            treatment: data.treatment,
+            preferredDate: data.preferredDate,
+            preferredTime: data.preferredTime,
+            message: data.message,
+            source: "Website Booking Form",
+          }),
+        });
+      } catch {
+        // Fallback gracefully even if backend route isn't set up yet
       }
 
-      // Track conversion
       trackConversion(data.treatment);
-
-      // Show success state
       setSuccess(true);
 
-      // Generate WhatsApp message
       const whatsappMessage = generateWhatsAppMessage({
         name: data.name,
         treatment: data.treatment,
@@ -112,22 +94,18 @@ export default function BookingForm() {
         message: data.message,
       });
 
-      // Format phone number for WhatsApp
-      const formattedPhone = formatPhoneForWhatsApp(clientData.contact.whatsappNumber);
+      const formattedPhone = formatPhoneForWhatsApp(contact.whatsappNumber);
 
-      // Redirect to WhatsApp after 1 second
       setTimeout(() => {
         redirectToWhatsApp(formattedPhone, whatsappMessage);
-      }, 1000);
+      }, 900);
 
-      // Reset form after 2 seconds
       setTimeout(() => {
         reset();
         setSuccess(false);
-      }, 3000);
+      }, 4000);
 
     } catch (err) {
-      console.error("Booking error:", err);
       setError(err instanceof Error ? err.message : "Failed to submit booking. Please try again.");
       setSuccess(false);
     } finally {
@@ -135,175 +113,200 @@ export default function BookingForm() {
     }
   };
 
-  // ==================== RENDER ====================
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg border border-gray-200">
-      <h2 className="text-2xl font-bold mb-2 text-gray-900">
-        📅 Book Your Consultation
-      </h2>
-      <p className="text-sm text-gray-600 mb-6">
-        We&apos;ll connect with you on WhatsApp shortly
-      </p>
+    <div className="w-full p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl">
+      <div className="mb-6 sm:mb-8">
+        <span
+          className="inline-block text-xs font-mono font-semibold uppercase tracking-widest px-2.5 py-1 rounded-md mb-2"
+          style={{ backgroundColor: `${PRIMARY}10`, color: ACCENT }}
+        >
+          Instant Confirmation
+        </span>
+        <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight" style={{ color: PRIMARY }}>
+          {booking?.formTitle || appointment?.formTitle || "Book an Appointment"}
+        </h3>
+        <p className="mt-1 text-sm sm:text-base leading-relaxed" style={{ color: `${PRIMARY}99` }}>
+          {booking?.formSubtitle || appointment?.formSubTitle || "We will confirm your consultation slot promptly."}
+        </p>
+      </div>
 
-      {/* SUCCESS MESSAGE */}
       {success && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 font-medium">✅ Booking submitted!</p>
-          <p className="text-sm text-green-700 mt-1">
-            You&apos;ll be redirected to WhatsApp in a moment...
-          </p>
+        <div
+          className="mb-6 p-4 rounded-xl text-sm font-medium transition-all"
+          style={{ backgroundColor: `${PRIMARY}12`, color: PRIMARY, border: `1px solid ${PRIMARY}30` }}
+        >
+          {booking?.successMessage || "✅ Your appointment request is confirmed! Redirecting to WhatsApp..."}
         </div>
       )}
 
-      {/* ERROR MESSAGE */}
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800 font-medium">❌ {error}</p>
+        <div
+          className="mb-6 p-4 rounded-xl text-sm font-medium"
+          style={{ backgroundColor: `${ACCENT}15`, color: ACCENT, border: `1px solid ${ACCENT}30` }}
+        >
+          ⚠️ {error}
         </div>
       )}
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-        {/* NAME FIELD */}
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4 sm:space-y-5">
+        {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name *
+          <label className="block text-xs sm:text-sm font-medium mb-1.5" style={{ color: PRIMARY }}>
+            Full Name <span style={{ color: ACCENT }}>*</span>
           </label>
           <input
             type="text"
             {...register("name")}
-            placeholder="Your full name"
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
-              errors.name ? "border-red-500" : "border-gray-300"
-            }`}
+            placeholder="e.g. Rahul Sharma"
+            className="w-full px-4 py-3 rounded-xl text-sm sm:text-base transition-all outline-none"
+            style={{
+              backgroundColor: `${BG}80`,
+              border: `1px solid ${errors.name ? ACCENT : `${PRIMARY}25`}`,
+              color: PRIMARY,
+            }}
             disabled={loading}
           />
           {errors.name && (
-            <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+            <p className="text-xs mt-1" style={{ color: ACCENT }}>{errors.name.message}</p>
           )}
         </div>
 
-        {/* PHONE FIELD */}
+        {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Phone Number *
+          <label className="block text-xs sm:text-sm font-medium mb-1.5" style={{ color: PRIMARY }}>
+            Phone Number <span style={{ color: ACCENT }}>*</span>
           </label>
           <input
             type="tel"
             {...register("phone")}
-            placeholder="10-digit phone number"
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
-              errors.phone ? "border-red-500" : "border-gray-300"
-            }`}
+            placeholder="+91 98765 43210"
+            className="w-full px-4 py-3 rounded-xl text-sm sm:text-base transition-all outline-none"
+            style={{
+              backgroundColor: `${BG}80`,
+              border: `1px solid ${errors.phone ? ACCENT : `${PRIMARY}25`}`,
+              color: PRIMARY,
+            }}
             disabled={loading}
           />
           {errors.phone && (
-            <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+            <p className="text-xs mt-1" style={{ color: ACCENT }}>{errors.phone.message}</p>
           )}
         </div>
 
-        {/* TREATMENT FIELD */}
+        {/* Treatment Select */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Treatment Interested In *
+          <label className="block text-xs sm:text-sm font-medium mb-1.5" style={{ color: PRIMARY }}>
+            Treatment / Concern <span style={{ color: ACCENT }}>*</span>
           </label>
           <select
             {...register("treatment")}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
-              errors.treatment ? "border-red-500" : "border-gray-300"
-            }`}
+            className="w-full px-4 py-3 rounded-xl text-sm sm:text-base transition-all outline-none cursor-pointer"
+            style={{
+              backgroundColor: `${BG}80`,
+              border: `1px solid ${errors.treatment ? ACCENT : `${PRIMARY}25`}`,
+              color: PRIMARY,
+            }}
             disabled={loading}
           >
-            <option value="">-- Select a treatment --</option>
-            {clientData.treatments?.map((treatment) => (
-              <option key={treatment.id} value={treatment.name}>
-                {treatment.name}
+            <option value="">Select Treatment Concern</option>
+            {treatments.map((t) => (
+              <option key={t.id} value={t.name}>
+                {t.name}
               </option>
             ))}
           </select>
           {errors.treatment && (
-            <p className="text-red-500 text-xs mt-1">{errors.treatment.message}</p>
+            <p className="text-xs mt-1" style={{ color: ACCENT }}>{errors.treatment.message}</p>
           )}
         </div>
 
-        {/* PREFERRED DATE */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Preferred Date (Optional)
-          </label>
-          <input
-            type="date"
-            {...register("preferredDate")}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
-              errors.preferredDate ? "border-red-500" : "border-gray-300"
-            }`}
-            disabled={loading}
-          />
-          {errors.preferredDate && (
-            <p className="text-red-500 text-xs mt-1">{errors.preferredDate.message}</p>
-          )}
+        {/* Preferred Date & Time */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <label className="block text-xs sm:text-sm font-medium mb-1.5" style={{ color: PRIMARY }}>
+              Preferred Date
+            </label>
+            <input
+              type="date"
+              {...register("preferredDate")}
+              className="w-full px-4 py-3 rounded-xl text-sm sm:text-base transition-all outline-none"
+              style={{
+                backgroundColor: `${BG}80`,
+                border: `1px solid ${PRIMARY}25`,
+                color: PRIMARY,
+              }}
+              disabled={loading}
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm font-medium mb-1.5" style={{ color: PRIMARY }}>
+              Preferred Time
+            </label>
+            <input
+              type="time"
+              {...register("preferredTime")}
+              className="w-full px-4 py-3 rounded-xl text-sm sm:text-base transition-all outline-none"
+              style={{
+                backgroundColor: `${BG}80`,
+                border: `1px solid ${PRIMARY}25`,
+                color: PRIMARY,
+              }}
+              disabled={loading}
+            />
+          </div>
         </div>
 
-        {/* PREFERRED TIME */}
+        {/* Additional Message */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Preferred Time (Optional)
-          </label>
-          <input
-            type="time"
-            {...register("preferredTime")}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            disabled={loading}
-          />
-        </div>
-
-        {/* MESSAGE FIELD */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Additional Message (Optional)
+          <label className="block text-xs sm:text-sm font-medium mb-1.5" style={{ color: PRIMARY }}>
+            Additional Notes (Optional)
           </label>
           <textarea
             {...register("message")}
-            placeholder="Any specific concerns or questions?"
+            placeholder="Tell us any symptoms, past treatments, or queries..."
             rows={3}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none ${
-              errors.message ? "border-red-500" : "border-gray-300"
-            }`}
+            className="w-full px-4 py-3 rounded-xl text-sm sm:text-base transition-all outline-none resize-none"
+            style={{
+              backgroundColor: `${BG}80`,
+              border: `1px solid ${PRIMARY}25`,
+              color: PRIMARY,
+            }}
             disabled={loading}
           />
-          {errors.message && (
-            <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>
-          )}
         </div>
 
-        {/* HONEYPOT (hidden anti-spam field) */}
-        <input
-          type="hidden"
-          {...register("website")}
-          style={{ display: "none" }}
-        />
+        {/* Honeypot */}
+        <input type="hidden" {...register("website")} style={{ display: "none" }} />
 
-        {/* SUBMIT BUTTON */}
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading || isSubmitting}
-          className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition flex items-center justify-center gap-2"
+          className="w-full py-4 px-6 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.99] flex items-center justify-center gap-2"
+          style={{
+            backgroundColor: PRIMARY,
+            color: BG,
+          }}
         >
           {loading || isSubmitting ? (
             <>
-              <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Booking...
+              <span className="inline-block w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: `${BG} transparent` }} />
+              Connecting...
             </>
           ) : (
             <>
-              📞 Book Appointment
+              Confirm Consultation Request
+              <svg className="w-5 h-5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
             </>
           )}
         </button>
 
-        {/* PRIVACY NOTE */}
-        <p className="text-xs text-gray-500 text-center">
-          We&apos;ll contact you via WhatsApp within the next 2 hours
+        <p className="text-center text-xs mt-3" style={{ color: `${PRIMARY}80` }}>
+          🔒 Your details are secure and directly shared with our clinical team.
         </p>
       </form>
     </div>

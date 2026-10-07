@@ -8,9 +8,9 @@ import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import { getTreatmentMessage } from '@/lib/whatsapp';
 
 /* ─── Brand Palette ───────────────────────────────────────── */
-const GREEN  = '#4B624A';
-const CREAM  = '#F5F6F0';
-const RED    = '#E64435';
+const GREEN  = clientData.colors.primary;
+const CREAM  = clientData.colors.background;
+const RED    = clientData.colors.accent;
 
 // Map icon strings from config to actual Lucide components
 const iconMap: Record<string, LucideIcon> = {
