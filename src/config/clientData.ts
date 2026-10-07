@@ -67,21 +67,27 @@ export const clientData = {
 
   // ── 2. BRAND ──────────────────────────────────────────────
   brand: {
-    name: "Your Clinic Name",            // e.g.  "Skintimacy Clinic"
+    name: "Dermoai",
     tagline: "Reveal Your Best Skin",
-    logoText: "DERM",                    // Short text used in navbar/footer logo
-    builtBy: "Sultandev",               // Credit shown in footer (optional)
+    logoText: "DERMOAI",
+    builtBy: "Sultandev",
   },
 
   // ── 3. DOCTOR PROFILE ─────────────────────────────────────
   aboutDoctor: {
     heading: "Meet Your Dermatologist",
     name: "Dr. [Name]",
+    role: "Founder & Lead Dermatologist",
     credentials: "(MBBS, MD, Dermatology)",
     bioParagraphs: [
       "An MCI-recognised dermatologist with advanced training from a leading medical institution. Specialising in evidence-based skincare, hair care, and aesthetic medicine.",
       "With years of clinical experience, our doctor brings expertise across general dermatology, cosmetic procedures, anti-aging treatments, and non-surgical facial rejuvenation.",
       "Every treatment plan is tailored to the individual — because your skin is unique."
+    ],
+    highlights: [
+      { value: "12+", label: "Years of Practice" },
+      { value: "5000+", label: "Happy Patients" },
+      { value: "20+", label: "Treatments Offered" },
     ],
     ctaText: "Book a Consultation",
     imageUrl: "/doctor-portrait.png",
@@ -130,6 +136,9 @@ export const clientData = {
     subheadline: "Board-certified dermatologists dedicated to medical and cosmetic excellence. Experience personalised treatments in a luxurious setting.",
     ctaText: "Book Appointment",
     imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop",
+    badge: "Now welcoming new patients",
+    rating: 4.9,
+    patientCount: "2,000+ happy patients",
   },
 
   // ── 8. SERVICES ───────────────────────────────────────────
@@ -216,13 +225,16 @@ export const clientData = {
   ],
 
   // ── 11. THEME / COLORS ────────────────────────────────────
-  //  Changing these re-colors the entire website instantly.
+  //  Brand palette:
+  //  Primary (Forest Green): #4B624A
+  //  Background (Warm White): #F5F6F0
+  //  Accent (Coral Red): #E64435
   colors: {
-    primary:      "#4A5D4E",   // Sage green (main brand color)
-    primaryHover: "#3C4B3F",
-    accent:       "#D4AF37",   // Gold (luxury highlights)
-    background:   "#FAFAFA",
-    textMain:     "#1F2937",
-    textMuted:    "#6B7280",
+    primary:      "#4B624A",
+    primaryHover: "#3A4E39",
+    accent:       "#E64435",
+    background:   "#F5F6F0",
+    textMain:     "#4B624A",
+    textMuted:    "#4B624A",
   },
 };
