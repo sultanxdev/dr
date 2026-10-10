@@ -67,9 +67,9 @@ export const clientData = {
 
   // ── 2. BRAND ──────────────────────────────────────────────
   brand: {
-    name: "Dermoai",
+    name: "Dr. Sultan Alam",
     tagline: "Reveal Your Best Skin",
-    logoText: "DERMOAI",
+    logoText: "DR SULTAN ALAM",
     builtBy: "Sultandev",
   },
 
