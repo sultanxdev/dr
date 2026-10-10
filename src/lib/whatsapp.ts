@@ -104,8 +104,8 @@ export const formatPhoneForWhatsApp = (phone: string): string => {
   // Remove all non-digit characters
   const cleaned = phone.replace(/\D/g, "");
   
-  // If it doesn't start with country code (like 91 for India), add it
-  if (!cleaned.startsWith("91") && cleaned.length === 10) {
+  // If standard 10-digit mobile number, prepend Indian country code 91
+  if (cleaned.length === 10) {
     return "91" + cleaned;
   }
   

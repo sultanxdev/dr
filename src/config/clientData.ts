@@ -76,7 +76,7 @@ export const clientData = {
   // ── 3. DOCTOR PROFILE ─────────────────────────────────────
   aboutDoctor: {
     heading: "Meet Your Dermatologist",
-    name: "Dr. [Name]",
+    name: "Dr. Sultan Alam",
     role: "Founder & Lead Dermatologist",
     credentials: "(MBBS, MD, Dermatology)",
     bioParagraphs: [
